@@ -29,6 +29,9 @@ flutter:
       android:
         package: io.openinstall.openinstall_flutter_plugin
         pluginClass: OpeninstallFlutterPlugin
+      ohos:
+        package: io.openinstall.openinstall_flutter_plugin
+        pluginClass: OpeninstallFlutterPlugin
       ios:
         pluginClass: OpeninstallFlutterPlugin
 

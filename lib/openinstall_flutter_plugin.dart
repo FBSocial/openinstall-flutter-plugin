@@ -7,7 +7,8 @@ typedef Future<Object> EventHandler(Map<String, Object> data);
 
 class OpeninstallFlutterPlugin {
   // 单例
-  static final OpeninstallFlutterPlugin _instance = new OpeninstallFlutterPlugin._internal();
+  static final OpeninstallFlutterPlugin _instance =
+      new OpeninstallFlutterPlugin._internal();
 
   factory OpeninstallFlutterPlugin() => _instance;
 
@@ -18,11 +19,13 @@ class OpeninstallFlutterPlugin {
   late EventHandler _wakeupHandler;
   late EventHandler _installHandler;
 
-  static const MethodChannel _channel = const MethodChannel('openinstall_flutter_plugin');
+  static const MethodChannel _channel =
+      const MethodChannel('openinstall_flutter_plugin');
 
   // 旧版本使用，保留一段时间，防止 npm 自动升级使用最新版本插件出现问题
   void config(bool adEnabled, String? oaid, String? gaid) {
-    print("OpenInstallPlugin:config(bool adEnabled, String? oaid, String? gaid) 后续版本将移除，请使用configAndroid(Map options)");
+    print(
+        "OpenInstallPlugin:config(bool adEnabled, String? oaid, String? gaid) 后续版本将移除，请使用configAndroid(Map options)");
     if (Platform.isAndroid) {
       var args = new Map();
       args["adEnabled"] = adEnabled;
@@ -44,7 +47,7 @@ class OpeninstallFlutterPlugin {
   }
 
   // 关闭剪切板读取
-  void clipBoardEnabled(bool enabled){
+  void clipBoardEnabled(bool enabled) {
     if (Platform.isAndroid) {
       var args = new Map();
       args["enabled"] = enabled;
@@ -53,8 +56,9 @@ class OpeninstallFlutterPlugin {
       // 仅使用于 Android 平台
     }
   }
+
   // 关闭SerialNumber读取
-  void serialEnabled(bool enabled){
+  void serialEnabled(bool enabled) {
     if (Platform.isAndroid) {
       var args = new Map();
       args["enabled"] = enabled;
@@ -67,7 +71,8 @@ class OpeninstallFlutterPlugin {
   // wakeupHandler 拉起回调.
   // alwaysCallback 是否总是有回调。当值为true时，只要触发了拉起方法调用，就会有回调
   // permission 初始化时是否申请 READ_PHONE_STATE 权限，已废弃。请用户自行进行权限申请
-  void init(EventHandler wakeupHandler, {bool alwaysCallback = false, bool permission = false}) {
+  void init(EventHandler wakeupHandler,
+      {bool alwaysCallback = false, bool permission = false}) {
     _wakeupHandler = wakeupHandler;
     _channel.setMethodCallHandler(_handleMethod);
     _channel.invokeMethod("registerWakeup");
@@ -82,8 +87,12 @@ class OpeninstallFlutterPlugin {
         args["alwaysCallback"] = alwaysCallback;
         _channel.invokeMethod("init", args);
       }
+    } else if (Platform.operatingSystem.toLowerCase().contains('ohos')) {
+      print("OpenInstallPlugin.init --- ohos");
+      _channel.invokeMethod("init");
     } else {
-      print("OpenInstallPlugin:插件版本>=1.3.1后，iOS环境下通用链接和scheme拉起的原生代理方法由插件内部来处理，如果出现拉起问题，请参考官方文档处理");
+      print(
+          "OpenInstallPlugin:插件版本>=1.3.1后，iOS环境下通用链接和scheme拉起的原生代理方法由插件内部来处理，如果出现拉起问题，请参考官方文档处理");
     }
   }
 

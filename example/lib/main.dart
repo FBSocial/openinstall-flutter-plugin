@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('openinstall plugin demo'),
+          title: const Text('openInstall -- plugin demo'),
         ),
         body: Center(
           child: Column(
@@ -72,6 +72,23 @@ class _MyAppState extends State<MyApp> {
                 child: const Text('reportEffectPoint',
                     style: TextStyle(fontSize: 20)),
               ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  Future<Object> wakeupHandler(Map<String, Object> data) async {
+                    try {
+                      print("OpenInstallPlugin wakeupHandler data: $data");
+                      if (data['bindData'] != null) {
+                        return true;
+                      } else {}
+                    } catch (e) {}
+                    return false;
+                  }
+
+                  _openinstallFlutterPlugin.init(wakeupHandler);
+                },
+                child: const Text('init', style: TextStyle(fontSize: 20)),
+              ),
             ],
           ),
         ),
@@ -82,8 +99,11 @@ class _MyAppState extends State<MyApp> {
   Future<Object> installHandler(Map<String, Object> data) async {
     print("installHandler : " + data.toString());
     setState(() {
-      installLog = "install result : channel=" + data['channelCode'].toString()
-          + ", data=" + data['bindData'].toString() + "\n";
+      installLog = "install result : channel=" +
+          data['channelCode'].toString() +
+          ", data=" +
+          data['bindData'].toString() +
+          "\n";
     });
     return "";
   }
@@ -91,8 +111,11 @@ class _MyAppState extends State<MyApp> {
   Future<Object> wakeupHandler(Map<String, Object> data) async {
     print("wakeupHandler : " + data.toString());
     setState(() {
-      wakeUpLog = "wakeup result : channel=" + data['channelCode'].toString()
-          + ", data=" + data['bindData'].toString() + "\n";
+      wakeUpLog = "wakeup result : channel=" +
+          data['channelCode'].toString() +
+          ", data=" +
+          data['bindData'].toString() +
+          "\n";
     });
     return "";
   }
