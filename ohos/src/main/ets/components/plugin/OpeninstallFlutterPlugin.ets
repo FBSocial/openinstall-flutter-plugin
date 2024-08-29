@@ -40,6 +40,19 @@ export default class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCa
       OpenInstall.init(this.context)
       console.log('openInstall.init -- end')
       result.success("success")
+    } else if (call.method == "getInstall") {
+      console.log('openInstall.getInstall -- start')
+      OpenInstall.getInstall({
+        onResult: result => {
+          let data = JSON.stringify(result)
+          console.log("OpenInstall", "getInstall data: " + data + " result:" + result)
+          this.channel?.invokeMethod("onInstallNotification", data)
+        },
+        onError: err => {
+          console.log("OpenInstall", "getInstall onError : " + JSON.stringify(err));
+        }
+      })
+      result.success("success")
     } else {
       result.notImplemented()
     }
