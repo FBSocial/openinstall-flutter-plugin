@@ -13,7 +13,6 @@ import { HashMap } from '@kit.ArkTS';
 /** OpeninstallFlutterPlugin **/
 export default class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCallHandler {
   private channel: MethodChannel | null = null;
-  private context = getContext(this) as common.UIAbilityContext
 
   constructor() {
   }
@@ -38,7 +37,9 @@ export default class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCa
       result.success("OpenHarmony ^ ^ ")
     } else if (call.method == "init") {
       console.log('openInstall.init')
-      OpenInstall.init(this.context)
+      let c = getContext(this) as common.UIAbilityContext
+      OpenInstall.init(c)
+      console.log('openInstall.init - end context:' + c)
       result.success("success")
     } else if (call.method == "getInstall") {
       console.log('openInstall.getInstall')
