@@ -7,7 +7,8 @@ import {
   MethodResult,
 } from '@ohos/flutter_ohos';
 import common from '@ohos.app.ability.common';
-import { OpenInstall } from '@openinstall/sdk'
+import { OpData, OpenInstall } from '@openinstall/sdk'
+import { HashMap } from '@kit.ArkTS';
 
 /** OpeninstallFlutterPlugin **/
 export default class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCallHandler {
@@ -36,17 +37,16 @@ export default class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCa
     if (call.method == "getPlatformVersion") {
       result.success("OpenHarmony ^ ^ ")
     } else if (call.method == "init") {
-      console.log('openInstall.init -- start')
+      console.log('openInstall.init')
       OpenInstall.init(this.context)
-      console.log('openInstall.init -- end')
       result.success("success")
     } else if (call.method == "getInstall") {
-      console.log('openInstall.getInstall -- start')
+      console.log('openInstall.getInstall')
       OpenInstall.getInstall({
         onResult: result => {
           let data = JSON.stringify(result)
           console.log("OpenInstall", "getInstall data: " + data + " result:" + result)
-          this.channel?.invokeMethod("onInstallNotification", data)
+          this.callbackFlutter("onInstallNotification", result)
         },
         onError: err => {
           console.log("OpenInstall", "getInstall onError : " + JSON.stringify(err));
@@ -56,5 +56,24 @@ export default class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCa
     } else {
       result.notImplemented()
     }
+  }
+
+  /**
+   * 回调flutter
+   */
+  callbackFlutter(method: string, data: OpData): void {
+    console.log("OpenInstall", "callbackFlutter method: " + method + " OpData:" + OpData)
+    this.channel?.invokeMethod(method, this.data2Map(data));
+  }
+
+  /**
+   * 跳转参数转为map
+   */
+  data2Map(data: OpData): HashMap<String, String> {
+    let result = new HashMap<String, String>()
+    result.set("channelCode", data.channelCode)
+    result.set("bindData", data.bindData)
+    console.log("OpenInstall", "data2Map channelCode: " + data.channelCode + " bindData:" + data.bindData)
+    return result;
   }
 }
