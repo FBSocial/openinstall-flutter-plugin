@@ -13,6 +13,7 @@ import { HashMap } from '@kit.ArkTS';
 /** OpeninstallFlutterPlugin **/
 export default class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCallHandler {
   private channel: MethodChannel | null = null;
+  private tag: string = 'fb-ohos-openInstall'
 
   constructor() {
   }
@@ -36,21 +37,21 @@ export default class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCa
     if (call.method == "getPlatformVersion") {
       result.success("OpenHarmony ^ ^ ")
     } else if (call.method == "init") {
-      console.log('openInstall.init')
+      console.log(this.tag, 'openInstall.init')
       let c = getContext(this) as common.UIAbilityContext
       OpenInstall.init(c)
-      console.log('openInstall.init - end context:' + c)
+      console.log(this.tag, 'openInstall.init - end')
       result.success("success")
     } else if (call.method == "getInstall") {
-      console.log('openInstall.getInstall')
+      console.log(this.tag, 'openInstall.getInstall')
       OpenInstall.getInstall({
         onResult: result => {
           let data = JSON.stringify(result)
-          console.log("OpenInstall", "getInstall data: " + data + " result:" + result)
+          console.log(this.tag, "getInstall data: " + data + " result:" + result)
           this.callbackFlutter("onInstallNotification", result)
         },
         onError: err => {
-          console.log("OpenInstall", "getInstall onError : " + JSON.stringify(err));
+          console.log(this.tag, "getInstall onError : " + JSON.stringify(err));
         }
       })
       result.success("success")
@@ -63,8 +64,8 @@ export default class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCa
    * 回调flutter
    */
   callbackFlutter(method: string, data: OpData): void {
-    console.log("OpenInstall", "callbackFlutter method: " + method + " OpData:" + OpData)
-    this.channel?.invokeMethod(method, this.data2Map(data));
+    console.log(this.tag, "callbackFlutter --> method: " + method)
+    this.channel?.invokeMethod(method, this.data2Map(data))
   }
 
   /**
@@ -72,9 +73,9 @@ export default class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCa
    */
   data2Map(data: OpData): HashMap<String, String> {
     let result = new HashMap<String, String>()
-    result.set("channelCode", data.channelCode)
-    result.set("bindData", data.bindData)
-    console.log("OpenInstall", "data2Map channelCode: " + data.channelCode + " bindData:" + data.bindData)
+    result.set("channelCode", data.channelCode ?? '')
+    result.set("bindData", JSON.stringify(data.bindData))
+    console.log(this.tag, "data2Map bindData:" + JSON.stringify(data.bindData))
     return result;
   }
 }

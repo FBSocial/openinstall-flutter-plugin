@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@ohos/flutter_ohos": "file:./har/flutter.har",
-    "@openinstall/sdk": "1.1.0"
+    "@openinstall/sdk": "2.0.0"
   },
   "modelVersion": ""
 }
