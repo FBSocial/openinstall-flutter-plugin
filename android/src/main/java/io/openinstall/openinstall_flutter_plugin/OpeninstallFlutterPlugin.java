@@ -87,11 +87,7 @@ public class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCallHandle
     public void onMethodCall(MethodCall call, @NonNull Result result) {
         Log.d(TAG, "invoke " + call.method);
         if (METHOD_CONFIG.equalsIgnoreCase(call.method)) {
-            String oaid = call.argument("oaid");
-            String gaid = call.argument("gaid");
-            Boolean adEnabled = call.argument("adEnabled");
-            Boolean macDisabled = call.argument("macDisabled");
-            Boolean imeiDisabled = call.argument("imeiDisabled");
+            config(call);
             config(adEnabled, oaid, gaid, macDisabled, imeiDisabled);
             result.success("OK");
         } else if (METHOD_CLIPBOARD_ENABLED.equalsIgnoreCase(call.method)) {
@@ -147,8 +143,7 @@ public class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCallHandle
         }
     }
 
-    private void config(Boolean adEnabled, String oaid, String gaid,
-                        Boolean macDisabled, Boolean imeiDisabled) {
+    private void config(MethodCall call) {
         Configuration.Builder builder = new Configuration.Builder();
         builder.adEnabled(checkBoolean(adEnabled));
         builder.oaid(oaid);
