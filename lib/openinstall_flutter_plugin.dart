@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
-typedef Future<Object> EventHandler(Map<String, Object> data);
+typedef Future EventHandler(Map<String, Object> data);
 
 class OpeninstallFlutterPlugin {
   // 单例
@@ -59,6 +59,7 @@ class OpeninstallFlutterPlugin {
 
   // 关闭SerialNumber读取
   void serialEnabled(bool enabled) {
+    print("OpenInstallPlugin:serialEnabled(bool enabled) 后续版本将移除，请使用configAndroid(Map options)");
     if (Platform.isAndroid) {
       var args = new Map();
       args["enabled"] = enabled;
@@ -115,6 +116,14 @@ class OpeninstallFlutterPlugin {
     } else {
       // 仅使用于 Android 平台
     }
+  }
+
+  Future<Map<Object?, Object?>> reportShare(String shareCode, String platform) async {
+    var args = new Map();
+    args["shareCode"] = shareCode;
+    args["platform"] = platform;
+    Map<Object?, Object?> data = await _channel.invokeMethod('reportShare', args);
+    return data;
   }
 
   void reportRegister() {
