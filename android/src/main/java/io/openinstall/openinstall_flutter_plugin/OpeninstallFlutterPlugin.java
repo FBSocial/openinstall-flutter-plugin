@@ -136,7 +136,15 @@ public class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCallHandle
         } else if (METHOD_EFFECT_POINT.equalsIgnoreCase(call.method)) {
             String pointId = call.argument("pointId");
             Integer pointValue = call.argument("pointValue");
-            OpenInstall.reportEffectPoint(pointId, pointValue == null ? 0 : pointValue);
+            if(TextUtils.isEmpty(pointId) || pointValue == null){
+                Log.w(TAG, "pointId is empty or pointValue is null");
+            }else{
+                Map<String, String> extraMap = call.argument("extras");
+//                if(extraMap != null) {
+//                    Log.d(TAG, "extra = " + extraMap.toString());
+//                }
+                OpenInstall.reportEffectPoint(pointId, pointValue, extraMap);
+            }
             result.success("OK");
         } else {
             result.notImplemented();
