@@ -125,7 +125,7 @@ class OpeninstallFlutterPlugin {
     var args = new Map();
     args["pointId"] = pointId;
     args["pointValue"] = pointValue;
-    if(extraMap != null){Add commentMore actions
+    if(extraMap != null){
       args["extras"] = extraMap;
     }
     _channel.invokeMethod('reportEffectPoint', args);
