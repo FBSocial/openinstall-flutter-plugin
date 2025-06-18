@@ -3,6 +3,7 @@ package io.openinstall.openinstall_flutter_plugin;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -88,7 +89,6 @@ public class OpeninstallFlutterPlugin implements FlutterPlugin, MethodCallHandle
         Log.d(TAG, "invoke " + call.method);
         if (METHOD_CONFIG.equalsIgnoreCase(call.method)) {
             config(call);
-            config(adEnabled, oaid, gaid, macDisabled, imeiDisabled);
             result.success("OK");
         } else if (METHOD_CLIPBOARD_ENABLED.equalsIgnoreCase(call.method)) {
             Boolean enabled = call.argument("enabled");
